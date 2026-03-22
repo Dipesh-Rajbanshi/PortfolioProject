@@ -1,0 +1,53 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Gallery{% endblock %}
+{% block static %}
+<link rel="stylesheet" href="{% static 'css/gallery.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="gallery-header">
+    <div class="gallery-header-top">
+        <h1>Gallery</h1>
+        <a href="{% url 'home' %}" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </div>
+
+    <div class="category-tabs">
+        <div class="tab active" onclick="filterGallery('all', this)">All Photos</div>
+        {% if cat %}
+        {% for c in cat %}
+        <div class="tab" onclick="filterGallery('{{ c.name }}', this)">{{ c.name }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+{% if img %}
+<div class="photo-grid" id="photoGrid">
+    {% for i in img %}
+    <div class="photo-card" data-cat="{{ i.category }}">
+        <div class="img-wrapper"><img src="{{ i.image.url }}"
+                alt="{{ i.image_name|default:i.image.name|cut:'Gallery/' }}"></div>
+        <div class="photo-info">{{ i.image_name|default:i.image.name|cut:'Gallery/' }}</div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="container" style="height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <p style="font-weight: 500; font-size: 1.5rem; color: var(--text-sub); margin-bottom: 20px;">No Images to Display</p>
+    <a href="/" class="btn btn-primary">Back to Home</a>
+</div>
+{% endif %}
+
+<div class="lightbox" id="lightbox">
+    <div class="lightbox-content">
+        <span class="close-lightbox" onclick="closeLarge()">&times;</span>
+        <button class="nav-btn prev-btn" onclick="changeImage(-1)"><i class="fas fa-chevron-left"></i></button>
+        <img src="" class="lightbox-img" id="largeImg">
+        <div class="lightbox-caption" id="caption"></div>
+        <button class="nav-btn next-btn" onclick="changeImage(1)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+</div>
+{% endblock %}

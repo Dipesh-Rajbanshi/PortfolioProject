@@ -1,0 +1,9 @@
+<nav class="nav-header">
+    {% if request.path == '/blogs/single' %}
+    <a href="{% url 'blogs' %}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Blogs</a>
+    {% elif request.path == '/projects/single/' %}
+    <a href="{% url 'projects' %}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Projects</a>
+    {% else %}
+    <a href="{% url 'home' %}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    {% endif %}
+</nav>

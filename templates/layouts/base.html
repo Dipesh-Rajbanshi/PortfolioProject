@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} | Dipesh Rajbanshi Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block static %}
+    <!-- page specific style -->
+    {% endblock %}
+</head>
+
+<body>
+    <!-- GitHub Banner -->
+    <div
+        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 20px; text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; position: relative; z-index: 1000;">
+        <div
+            style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
+            <i class="fab fa-github" style="font-size: 20px;"></i>
+            <span style="font-size: 14px; font-weight: 500;">⭐ Check out the GitHub! for project source code ⭐</span>
+            <a href="https://github.com/dipeshrajbanshi" target="_blank"
+                style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 6px 15px; border-radius: 25px; font-size: 13px; font-weight: 600; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;"
+                onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='scale(1.05)'"
+                onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='scale(1)'">
+                <i class="fab fa-github"></i>
+                Visit Repository
+                <i class="fas fa-arrow-right" style="font-size: 12px;"></i>
+            </a>
+        </div>
+    </div>
+
+    <button class="theme-toggle-btn" id="themeToggle" title="Toggle Theme">
+        <i class="fas fa-moon"></i>
+    </button>
+    {% if request.path != '/' and request.path != '/gallery/' %}
+    {% include 'layouts/header.html' %}
+    {% endif %}
+    <main class="container {% if request.path == '/projects/single/' %}pd-container{% endif %}">
+        {% block content %}
+        <!-- your content area -->
+        {% endblock %}
+        {% if request.path != '/' %}
+        {% include 'layouts/footer.html' %}
+        {% endif %}
+    </main>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

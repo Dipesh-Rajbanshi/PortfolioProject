@@ -1,0 +1,259 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block static %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="profile-header">
+
+    <div class="cover-photo-wrapper">
+        {% if user_data.cover_picture %}
+        <img src="{{ user_data.cover_picture.url }}" alt="Cover Photo" loading="lazy" class="cover-img">
+        {% else %}
+        <img src="{% static 'images/No_Image_Available.jpg' %}" alt="Cover Photo" loading="lazy" class="cover-img">
+        {% endif %}
+    </div>
+
+    <div class="profile-info">
+        <div class="avatar-wrapper">
+            {% if user_data.profile_picture %}
+            <img src="{{ user_data.profile_picture.url }}" alt="Profile Photo" loading="lazy" class="avatar-img">
+            {% else %}
+            <img src="{% static 'images/profile-picture.png' %}" alt="Profile Photo" loading="lazy" class="avatar-img">
+            {% endif %}
+        </div>
+        <div class="user-details">
+            <h1>{{ user_data.name }}</h1>
+            <p style="text-transform: capitalize;">{{ user_data.profession }}</p>
+        </div>
+        <div class="header-actions">
+            <a href="{% url 'contact' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Contact Me</a>
+            {% if user_data.resume_file %}
+            <a href="{{ user_data.resume_file.url }}" class="btn btn-secondary" download>
+                <i class="fa-solid fa-cloud-arrow-down"></i> Download CV
+            </a>
+            {% else %}
+            <a href="#" class="btn btn-secondary" onclick="alert('File is not available. Thank You '); return false;">
+                <i class="fa-solid fa-cloud-arrow-down"></i> Download CV
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+</section>
+
+<div class="content-grid">
+    <aside>
+        {% if user_data.bio or social %}
+        <div class="card">
+            {% if user_data.bio %}
+            <h3>My Bio</h3>
+            <p style="margin-bottom: 12px;">{{ user_data.bio | truncatechars:150 }}</p>
+            {% endif %}
+
+            {% if contact %}
+            <div style="font-size: 14px; color: var(--text-sub);">
+                {% if contact.address %}
+                <p style="margin-bottom: 8px;">
+                    <i class="fas fa-map-marker-alt" style="width: 20px;"></i>
+                    {{ contact.address }}
+                </p>
+                {% endif %}
+
+                {% if contact.email %}
+                <p style="margin-bottom: 8px;">
+                    <i class="fas fa-envelope" style="width: 20px;"></i>
+                    {{ contact.email }}
+                </p>
+                {% endif %}
+
+                {% if contact.working_time %}
+                <p style="margin-bottom: 8px;">
+                    <i class="fas fa-clock" style="width: 20px;"></i>
+                    {{ contact.working_time }}
+                </p>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if social %}
+            <h3>Follow Me</h3>
+            <div class="social-links">
+                {% for s in social %}
+                <a href="{{ s.url }}" target="_blank" class="social-link" title="{{ s.platform_name }}">
+                    {{ s.icon | safe }}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if skills %}
+        <div class="card">
+            <h3>Skills</h3>
+            <div class="skills-list">
+                {% for i in skills %}
+                <span class="skill-pill">{{ i.skill_name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if blog %}
+        <div class="card">
+            <div class="section-header">
+                <h3>Daily Blogs</h3>
+                <a href="{% url 'blogs' %}" class="view-all-link">View All →</a>
+            </div>
+
+            <div class="recent-projects-list">
+                {% for b in blog|slice:":3" %}
+                <a href="{% url 'blog-details' slug=b.slug %}" class="recent-project-link">
+                    <div class="recent-project-item">
+                        <div class="recent-project-info">
+                            <p>{{ b.short_description | truncatechars:65 }}</p>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if project %}
+        <div class="card">
+            <div class="section-header">
+                <h3>Recent Projects</h3>
+                <a href="{% url 'projects' %}" class="view-all-link">View All →</a>
+            </div>
+
+            <div class="recent-projects-list">
+                {% for p in project|slice:":3" %}
+                <a href="{% url 'project-details' slug=p.slug %}" class="recent-project-link">
+                    <div class="recent-project-item">
+                        {% if p.image %}
+                        <img src="{{ p.image.url }}" alt="{{ p.title }}" loading="lazy" class="recent-project-img">
+                        {% else %}
+                        <img src="{% static 'images/No_Image_Available.jpg' %}" alt="{{ p.title }}" loading="lazy"
+                            class="recent-project-img">
+                        {% endif %}
+                        <div class="recent-project-info">
+                            <h4>{{ p.title | truncatechars:25 }}</h4>
+                            <p>{{ p.short_description | truncatechars:65 }}</p>
+                            <div class="recent-project-meta">
+                                <span><i class="far fa-calendar"></i> {{ p.updated_at|date:"M d, Y" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if img %}
+        <div class="card">
+            <div class="section-header">
+                <h3>Gallery</h3>
+                <a href="{% url 'gallery' %}" class="view-all-link">View All →</a>
+            </div>
+            <div class="sidebar-gallery">
+                {% for i in img %}
+                <a href="{% url 'gallery' %}"><img src="{{ i.image.url }}" loading="lazy"
+                        alt="{{ i.image_name|default:i.image.name|cut:'Gallery/' }}"></a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif%}
+    </aside>
+
+    <section class="feed">
+        {% if feed %}
+        {% for item in feed %}
+        {% if item.type == 'project' %}
+        {% with i=item.object %}
+        <div class="card project-post">
+            <div class="post-header">
+                <div>
+                    <div style="font-weight: bold;">{{ i.title | capfirst }}</div>
+                    <div style="font-size: 12px; color: var(--text-sub);">
+                        <i class="far fa-calendar"></i> {{ i.updated_at | timesince }} ago
+                    </div>
+                </div>
+            </div>
+
+            <div class="post-text">
+                {{ i.short_description | capfirst }}
+            </div>
+
+            <div class="project-image-container">
+                {% if i.image %}
+                <img src="{{ i.image.url }}" alt="{{ i.title }}" loading="lazy" class="project-img">
+                {% else %}
+                {% load static %}
+                <img src="{% static 'images/No_Image_Available.jpg' %}" alt="{{ i.title }}" loading="lazy"
+                    class="project-img">
+                {% endif %}
+            </div>
+
+            <div class="post-actions">
+                <a href="{{ i.github_repo }}" class="action-item"><i class="fab fa-github"></i> GitHub</a>
+                <a href="{{ i.live_demo }}" class="action-item"><i class="fas fa-external-link-alt"></i>Live Preview</a>
+                <a href="{% url 'project-details' slug=i.slug %}" class="action-item"><i class="far fa-comment"></i>
+                    Details</a>
+            </div>
+        </div>
+        {% endwith %}
+
+        {% elif item.type == 'blog' %}
+        {% with b=item.object %}
+        <div class="card project-post">
+            <div class="post-header">
+                <div>
+                    <div style="font-weight: bold;">{{ b.title | capfirst }}</div>
+                    <div style="font-size: 12px; color: var(--text-sub);">
+                        <i class="far fa-calendar"></i> {{ b.updated_at | timesince }} ago
+                    </div>
+                </div>
+            </div>
+
+            <div class="post-text">
+                {{ b.short_description | capfirst }}
+            </div>
+
+            <div class="project-image-container">
+                {% if b.image %}
+                <img src="{{ b.image.url }}" alt="{{ b.title }}" loading="lazy" class="project-img">
+                {% else %}
+                {% load static %}
+                <img src="{% static 'images/No_Image_Available.jpg' %}" alt="{{ b.title }}" loading="lazy"
+                    class="project-img">
+                {% endif %}
+            </div>
+
+            <div class="post-actions">
+                <a href="{% url 'blog-details' slug=b.slug %}" class="action-item"><i class="fas fa-book-open"></i>
+                    Read More</a>
+                <a href="javascript:void(0);" class="action-item" onclick="shareSite(window.location.origin)">
+                    <i class="fas fa-share-alt"></i> Share
+                </a>
+            </div>
+        </div>
+        {% endwith %}
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        <div class="card" style="display: flex; justify-content: center; align-items: center; height: 61vh;">
+            <p style="font-size: 1.2rem; font-weight: 500;">No Content available</p>
+        </div>
+        {% endif %}
+
+        {% include 'layouts/footer.html' %}
+    </section>
+</div>
+
+{% endblock %}

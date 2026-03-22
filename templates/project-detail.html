@@ -1,0 +1,85 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Project Sinle {% endblock %}
+{% block static %}
+<link rel="stylesheet" href="{% static 'css/project-detail.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="pd-grid">
+    <div class="pd-main">
+        <div class="pd-card">
+            <h1 class="pd-title">{{ data.title | capfirst }}</h1>
+            <div class="pd-meta">
+                <!-- <span><i class="fas fa-code-branch"></i> v2.4.0</span> • -->
+                <span><i class="fas fa-clock"></i> Updated {{ data.updated_at | timesince }} ago</span>
+            </div>
+            {% if data.image %}
+            <img src="{{ data.image.url }}"
+                alt="{{ data.title }}" class="pd-hero-img">
+            {% else %}
+            <img src="{% static 'images/No_Image_Available.jpg' %}"
+                alt="{{ data.title }}" class="pd-hero-img">
+            {% endif %}
+            <div class="pd-section">
+                <h2>Overview</h2>
+                <p>{{ data.short_description }}</p>
+            </div>
+
+            {% if data.full_description %}
+            <div class="pd-section">
+                <h2>Full Details</h2>
+                <p>{{ data.full_description }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="pd-sidebar">
+        <div class="pd-sidebar-card">
+            <h3>Technology Used</h3>
+            <ul class="pd-tag-list">
+                {% for tech in data.technology_used.all %}
+                <li class="pd-tag">{{ tech | capfirst }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="pd-sidebar-card">
+            <h3>Project Links</h3>
+            <div class="pd-btn-group">
+                <a href="{{ data.live_demo }}" class="btn btn-outline pd-block"><i class="fas fa-external-link-alt"></i> Live Preview</a>
+                <a href="{{ data.github_repo }}" class="btn btn-primary pd-block"><i class="fab fa-github"></i>Github Repository</a>
+            </div>
+        </div>
+
+        <!-- Updated Intro Section (matching index page) -->
+        <div class="pd-sidebar-card">
+            <h3>Intro</h3>
+            <p style="margin-bottom: 12px;">{{ user.bio | truncatechars:150 }}</p>
+            
+            <!-- <div style="font-size: 14px; color: var(--text-sub);">
+                <p style="margin-bottom: 8px;"><i class="fas fa-map-marker-alt" style="width: 20px;"></i> San
+                    Francisco</p>
+                <p style="margin-bottom: 8px;"><i class="fas fa-briefcase" style="width: 20px;"></i> Available
+                    for Freelance</p>
+                <p style="margin-bottom: 8px;"><i class="fas fa-link" style="width: 20px;"></i> alexdev.io</p>
+            </div> -->
+
+            <!-- Social Links -->
+             {% if social %}
+             <h3>Folllow Me</h3>
+             <div class="social-links" style="margin-top: 16px;">
+                {% for i in social %}
+                <a href="{{ i.url }}" target="_blank" class="social-link" title="{{ i.platform_name }}">
+                   {{ i.icon | safe }}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

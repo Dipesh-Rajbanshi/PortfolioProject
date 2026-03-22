@@ -1,0 +1,33 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Blog-Single{% endblock %}
+{% block static %}
+<link rel="stylesheet" href="{% static 'css/blog.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<article class="blog-single">
+    <h1>{{ blog.title | capfirst }}</h1>
+
+    <div class="blog-single-meta">
+        <span><i class="far fa-calendar"></i> Updated {{ blog.updated_at | timesince }} ago</span>
+    </div>
+    {% if blog.image %}
+    <img src="{{ blog.image.url }}" alt="{{ blog.title }}"
+        class="blog-single-img">
+    {% else %}
+    <img src="{% static 'images/No_Image_Available.jpg' %}" alt="{{ blog.title }}"
+        class="blog-single-img">
+    {% endif %}
+    <div class="blog-single-content">
+        <p>{{ blog.short_description | capfirst }}</p>
+
+        {% if blog.full_details %}
+        <h2>Full Blog</h2>
+        <p>{{ blog.full_details }}</p>
+        {% endif %}
+    </div>
+</article>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Project{% endblock %}
+{% block static %}
+<link rel="stylesheet" href="{% static 'css/projects.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="projects-header">
+    <h1>All Projects</h1>
+    <p class="projects-subtitle">A collection of my work</p>
+</div>
+{% if data %}
+
+<div class="projects-grid">
+    {% for i in data %}
+    <div class="project-card">
+        <div class="project-card-image">
+            {% if i.image %}
+            <img src="{{ i.image.url }}"
+                alt="{{ i.title }}">
+            {% else %}
+            <img src="{% static 'images/No_Image_Available.jpg' %}" alt="{{ i.title }}">
+            {% endif %}
+        </div>
+        <div class="project-card-content">
+            <div class="project-card-header">
+                <h2>{{ i.title | truncatechars:55 }}</h2>
+            </div>
+            <p class="project-card-description">{{ i.short_description | truncatechars:100 }}</p>
+            <div class="project-card-tags">
+                {% for tech in i.technology_used.all %}
+                    <span class="project-tag">{{ tech | capfirst }}</span>
+                {% endfor %}
+            </div>
+            <div class="project-card-footer">
+                <div class="project-meta">
+                    <span><i class="far fa-calendar"></i>{{ i.updated_at | date:"M d, Y" }}</span>
+                </div>
+                <a href="{% url 'project-details' slug=i.slug %}" class="project-view-btn">View Project →</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

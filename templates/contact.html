@@ -1,0 +1,150 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Contact{% endblock %}
+{% block static %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
+{% endblock %}
+{% block content %}
+
+<div class="contact-header">
+    <h1>Get In Touch</h1>
+    <p class="contact-subtitle">Have a project in mind? Let's work together!</p>
+</div>
+
+<div class="contact-grid">
+    <!-- Contact Info Section -->
+    <div class="contact-info">
+        {% if contact %}
+        <div class="contact-info-card">
+            <h2>{{ contact.title | capfirst }}</h2>
+            <p class="contact-info-text">{{ contact.message | capfirst }}</p>
+
+            {% if contact.address %}
+            <div class="contact-details">
+                <div class="contact-detail-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>
+                        <h4>Address</h4>
+                        <p>{{ contact.address | title }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if contact.email %}
+                <div class="contact-detail-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                        <h4>Email</h4>
+                        <p><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if contact.phone_number %}
+                <div class="contact-detail-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div>
+                        <h4>Phone</h4>
+                        <p><a href="tel:{{ contact.phone_number }}">{{ contact.phone_number }}</a></p>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if contact.working_time %}
+                <div class="contact-detail-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <h4>Working Hours</h4>
+                        <p>{{ contact.working_time | upper }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% if social %}
+            <div class="contact-social">
+                <h4>Follow Me</h4>
+                <div class="social-links">
+                    {% for s in social %}
+                    <a href="{{ s.url }}" target="_blank" class="social-link" title="{{ s.platform_name }}">
+                        {{ s.icon | safe }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="contact-info-card">
+            <h2>Let's Connect</h2>
+            <p class="contact-info-text">I'm currently available for freelance work and full-time opportunities. If you
+                have a project that needs some creative development, I'd love to hear about it.</p>
+
+            {% if social %}
+            <div class="contact-social">
+                <h4>Follow Me</h4>
+                <div class="social-links">
+                    {% for s in social %}
+                    <a href="{{ s.url }}" target="_blank" class="social-link" title="{{ s.platform_name }}">
+                        {{ s.icon | safe }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Contact Form Section -->
+    <div class="contact-form-card">
+        <h2>Send Me a Message</h2>
+
+        <!-- Django Messages (Success/Error) -->
+        {% if messages %}
+        {% for message in messages %}
+        <div class="form-status {{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form id="contactForm" class="contact-form" method="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name"><i class="fas fa-user"></i> Your Name *</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your FullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Your Email *</label>
+                    <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="subject"><i class="fas fa-tag"></i> Subject</label>
+                <input type="text" id="subject" name="subject" placeholder="What's this about?">
+            </div>
+
+            <div class="form-group">
+                <label for="message"><i class="fas fa-comment"></i> Your Message *</label>
+                <textarea id="message" name="message" rows="6" placeholder="Your message here..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary submit-btn" id="submitBtn">
+                <i class="fas fa-paper-plane"></i> Send Message
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
