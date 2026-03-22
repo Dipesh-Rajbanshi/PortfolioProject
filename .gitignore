@@ -176,4 +176,3 @@ cython_debug/
 
 # statiffile
 static/
-db.sqlite3
